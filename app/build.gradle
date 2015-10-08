@@ -1,5 +1,6 @@
 apply plugin: 'com.android.application'
 apply plugin: 'com.neenbedankt.android-apt'
+apply plugin: 'me.tatarka.retrolambda'
 
 android {
     compileSdkVersion 23
@@ -11,6 +12,10 @@ android {
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
     buildTypes {
         release {
@@ -34,4 +39,6 @@ dependencies {
     apt "org.projectlombok:lombok:1.16.6"
     compile 'com.jakewharton.timber:timber:4.0.1'
     compile 'com.jakewharton:butterknife:7.0.1'
+    compile 'org.apache.commons:commons-lang3:3.4'
+    compile 'io.reactivex:rxandroid:1.0.1'
 }

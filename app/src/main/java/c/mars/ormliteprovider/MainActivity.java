@@ -20,7 +20,7 @@ public class MainActivity extends AppCompatActivity {
     @Bind(R.id.recycler_view)
     RecyclerView recyclerView;
     RecyclerView.LayoutManager layoutManager;
-    RecyclerView.Adapter adapter;
+    Adapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,11 +38,14 @@ public class MainActivity extends AppCompatActivity {
         try {
             Dao<Car, Long> dao = helper.getDao();
 
-            dao.create(new Car(1, "ford"));
-            dao.create(new Car(2, "hummer"));
-            dao.create(new Car(3, "jeep"));
+
+            dao.createOrUpdate(new Car(1, "ford"));
+            dao.createOrUpdate(new Car(2, "hummer"));
+            dao.createOrUpdate(new Car(3, "jeep"));
 
             List<Car> cars = dao.queryForAll();
+            List<String> data = rx.Observable.from(cars).map(Car::getModel).toList().toBlocking().first();
+            adapter.setData(data.toArray(new String[data.size()]));
             Timber.d(cars.toString());
         } catch (SQLException e) {
             e.printStackTrace();

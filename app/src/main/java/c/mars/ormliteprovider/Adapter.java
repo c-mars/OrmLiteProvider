@@ -8,11 +8,15 @@ import android.widget.TextView;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 /**
  * Created by Constantine Mars on 10/8/15.
  */
+@EqualsAndHashCode(callSuper = false)
 @SuppressWarnings("DefaultFileTemplate")
+@Data
 public class Adapter extends RecyclerView.Adapter<Adapter.ViewHolder> {
     private String[] data = {"a", "b", "c", "d"};
 
