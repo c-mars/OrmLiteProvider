@@ -13,9 +13,11 @@ import java.sql.SQLException;
 /**
  * Created by Constantine Mars on 10/8/15.
  */
+@SuppressWarnings("DefaultFileTemplate")
 public class DbHelper extends OrmLiteSqliteOpenHelper {
     public static final int VERSION=1;
     public static final String DB_NAME="cars";
+    private Dao<Car, Long> carDao;
 
     public DbHelper(Context context) {
         super(context, DB_NAME, null, VERSION);
@@ -44,7 +46,15 @@ public class DbHelper extends OrmLiteSqliteOpenHelper {
         }
     }
 
-    private Dao<Car, Long> carDao;
+    public void resetDb() {
+        try {
+            TableUtils.dropTable(getConnectionSource(), Car.class, false);
+            TableUtils.createTable(getConnectionSource(), Car.class);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
     public Dao<Car, Long> getDao() throws SQLException {
         if(carDao==null){
             carDao=getDao(Car.class);

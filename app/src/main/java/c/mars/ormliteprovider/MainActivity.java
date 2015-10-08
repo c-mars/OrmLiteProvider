@@ -37,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
         DbHelper helper= OpenHelperManager.getHelper(this, DbHelper.class);
         try {
             Dao<Car, Long> dao = helper.getDao();
+            helper.resetDb();
 
 
             dao.createOrUpdate(new Car(1, "ford"));
