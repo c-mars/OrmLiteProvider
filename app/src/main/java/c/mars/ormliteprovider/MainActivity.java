@@ -5,7 +5,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
-import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.j256.ormlite.dao.Dao;
 
 import java.sql.SQLException;
@@ -34,11 +33,10 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
 
-        DbHelper helper= OpenHelperManager.getHelper(this, DbHelper.class);
-        try {
-            Dao<Car, Long> dao = helper.getDao();
-            helper.resetDb();
+        Dao<Car, Long> dao = DbHelper.getInstance().getCarDao();
 
+        try {
+            DbHelper.getInstance().resetDb();
 
             dao.createOrUpdate(new Car(1, "ford"));
             dao.createOrUpdate(new Car(2, "hummer"));
@@ -48,10 +46,10 @@ public class MainActivity extends AppCompatActivity {
             List<String> data = rx.Observable.from(cars).map(Car::getModel).toList().toBlocking().first();
             adapter.setData(data.toArray(new String[data.size()]));
             Timber.d(cars.toString());
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
 
     }
 }
