@@ -23,10 +23,10 @@ public class WeatherResponse {
 
     public void save() {
         WeatherTable weatherTable = toTable();
-        weatherTable.save();
+        weatherTable.insert();
     }
 
-    private WeatherTable toTable() {
+    public WeatherTable toTable() {
         if (list.length > 0) {
             return new WeatherTable(city.getName(), list[0].getMain().getTemp(), list[0].getWeather()[0].getDescription());
         }

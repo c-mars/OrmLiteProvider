@@ -17,19 +17,20 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import c.mars.ormliteprovider.R;
 import c.mars.ormliteprovider.dbflow.Queen;
+import c.mars.ormliteprovider.dbflow.WeatherTable;
 import c.mars.ormliteprovider.loaders.WeatherLoader;
-import c.mars.ormliteprovider.loaders.api.WeatherResponse;
+import c.mars.ormliteprovider.loaders.api.WeatherAdapter;
 import c.mars.ormliteprovider.ormlite.Car;
 import c.mars.ormliteprovider.ormlite.DbHelper;
 import timber.log.Timber;
 
-public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<WeatherResponse> {
+public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<WeatherTable> {
 
     public static final int LOADER_ID = 1;
     @Bind(R.id.recycler_view)
     RecyclerView recyclerView;
     RecyclerView.LayoutManager layoutManager;
-    Adapter adapter;
+    WeatherAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +40,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         ButterKnife.bind(this);
 
         layoutManager = new LinearLayoutManager(this);
-        adapter = new Adapter();
+        adapter = new WeatherAdapter();// Adapter();
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
 
@@ -79,7 +80,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
             List<Car> cars = dao.queryForAll();
             List<String> data = rx.Observable.from(cars).map(Car::getModel).toList().toBlocking().first();
-            adapter.setData(data.toArray(new String[data.size()]));
+//            adapter.setData(data.toArray(new String[data.size()]));
             Timber.d(cars.toString());
 
 
@@ -89,22 +90,22 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     }
 
     @Override
-    public Loader<WeatherResponse> onCreateLoader(int id, Bundle args) {
+    public Loader<WeatherTable> onCreateLoader(int id, Bundle args) {
         return new WeatherLoader(this);
     }
 
     @Override
-    public void onLoadFinished(Loader<WeatherResponse> loader, WeatherResponse data) {
+    public void onLoadFinished(Loader<WeatherTable> loader, WeatherTable data) {
         int id = loader.getId();
         if (data != null) {
-            Timber.d(data.getTemperature().toString());
-            data.save();
+            Timber.d(data.getTemp().toString());
+            data.save(); //insert()
         }
         getLoaderManager().destroyLoader(id);
     }
 
     @Override
-    public void onLoaderReset(Loader<WeatherResponse> loader) {
+    public void onLoaderReset(Loader<WeatherTable> loader) {
 
     }
 }
