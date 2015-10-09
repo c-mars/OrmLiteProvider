@@ -1,4 +1,4 @@
-package c.mars.ormliteprovider;
+package c.mars.ormliteprovider.ormlite;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;

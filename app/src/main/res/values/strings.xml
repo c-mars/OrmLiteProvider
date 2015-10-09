@@ -1,4 +1,4 @@
 <resources>
-    <string name="app_name">OrmLiteProvider</string>
+    <string name="app_name">OrmLite ContentProvider Example</string>
     <string name="action_settings">Settings</string>
 </resources>

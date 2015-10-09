@@ -1,4 +1,4 @@
-package c.mars.ormliteprovider;
+package c.mars.ormliteprovider.ui;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import c.mars.ormliteprovider.R;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
