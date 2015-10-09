@@ -1,4 +1,4 @@
-package c.mars.ormliteprovider.loaders;
+package c.mars.ormliteprovider.loaders.api;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -9,16 +9,19 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class WeatherItem {
+    Long id;
+
     Main main;
     Weather[] weather;
 
     @Data
     public static class Main {
+        Long id;
         Double temp;
     }
 
     @Data
-    private static class Weather {
+    public static class Weather {
         String main;
         String description;
     }

@@ -1,4 +1,4 @@
-package c.mars.ormliteprovider.loaders;
+package c.mars.ormliteprovider.loaders.api;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
