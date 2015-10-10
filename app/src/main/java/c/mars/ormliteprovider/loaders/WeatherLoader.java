@@ -3,8 +3,6 @@ package c.mars.ormliteprovider.loaders;
 import android.content.Context;
 import android.support.v4.content.AsyncTaskLoader;
 
-import com.raizlabs.android.dbflow.sql.language.Select;
-
 import c.mars.ormliteprovider.dbflow.WeatherTable;
 import c.mars.ormliteprovider.loaders.api.ApiHelper;
 import c.mars.ormliteprovider.loaders.api.WeatherResponse;
@@ -21,15 +19,18 @@ public class WeatherLoader extends AsyncTaskLoader<WeatherTable> {
 
     @Override
     public WeatherTable loadInBackground() {
-        long count = new Select().from(WeatherTable.class).count();
+
+//            long count = new Select().from(WeatherTable.class).count();
 //        don't load if already cached
-        if (count > 0) {
-            return new Select().from(WeatherTable.class).querySingle();
-        }
+//            if (count > 0) {
+//                return new Select().from(WeatherTable.class).querySingle();
+//            }
+
 
 //        force load
         WeatherResponse response = ApiHelper.getForecast().toBlocking().first();
         Timber.d(response.getTemperature().toString());
+        response.saveWeatherList();
         return response.toTable();
     }
 

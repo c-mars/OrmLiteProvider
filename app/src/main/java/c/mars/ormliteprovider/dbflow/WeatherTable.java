@@ -12,7 +12,7 @@ import timber.log.Timber;
  * Created by Constantine Mars on 10/9/15.
  */
 @Data
-@Table(databaseName = Db.NAME, tableName = "weather")
+@Table(databaseName = Db.NAME)
 public class WeatherTable extends BaseModel {
     @Column
     @PrimaryKey(autoincrement = true)

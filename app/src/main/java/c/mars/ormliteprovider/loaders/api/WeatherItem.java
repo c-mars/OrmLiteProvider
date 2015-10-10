@@ -21,7 +21,7 @@ public class WeatherItem {
     }
 
     @Data
-    public static class Weather {
+    public class Weather {
         String main;
         String description;
     }

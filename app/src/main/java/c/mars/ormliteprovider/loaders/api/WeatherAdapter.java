@@ -12,14 +12,14 @@ import com.raizlabs.android.dbflow.list.FlowQueryList;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import c.mars.ormliteprovider.R;
-import c.mars.ormliteprovider.dbflow.WeatherTable;
+import c.mars.ormliteprovider.dbflow.WeatherDescTable;
 
 /**
  * Created by Constantine Mars on 10/9/15.
  */
 public class WeatherAdapter extends RecyclerView.Adapter<WeatherAdapter.ViewHolder> {
 
-    private FlowQueryList<WeatherTable> cursorList = new FlowQueryList<WeatherTable>(WeatherTable.class);
+    private FlowQueryList<WeatherDescTable> cursorList = new FlowQueryList<>(WeatherDescTable.class);
     private Context context;
 
     public WeatherAdapter(Context context) {
@@ -35,8 +35,8 @@ public class WeatherAdapter extends RecyclerView.Adapter<WeatherAdapter.ViewHold
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        WeatherTable weatherTable = cursorList.get(position);
-        holder.textView.setText(weatherTable.getWeather());
+        WeatherDescTable weather = cursorList.get(position);
+        holder.textView.setText(weather.getDescription());
     }
 
     @Override
