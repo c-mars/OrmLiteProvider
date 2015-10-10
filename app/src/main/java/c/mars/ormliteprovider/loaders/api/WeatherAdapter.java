@@ -19,12 +19,10 @@ import c.mars.ormliteprovider.dbflow.WeatherDescTable;
  */
 public class WeatherAdapter extends RecyclerView.Adapter<WeatherAdapter.ViewHolder> {
 
-    private FlowQueryList<WeatherDescTable> cursorList = new FlowQueryList<>(WeatherDescTable.class);
-    private Context context;
+    private FlowQueryList<WeatherDescTable> queryList = new FlowQueryList<>(WeatherDescTable.class);
 
     public WeatherAdapter(Context context) {
-        this.context = context;
-        cursorList.enableSelfRefreshes(context);
+        queryList.enableSelfRefreshes(context);
     }
 
     @Override
@@ -35,13 +33,13 @@ public class WeatherAdapter extends RecyclerView.Adapter<WeatherAdapter.ViewHold
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        WeatherDescTable weather = cursorList.get(position);
+        WeatherDescTable weather = queryList.get(position);
         holder.textView.setText(weather.getDescription());
     }
 
     @Override
     public int getItemCount() {
-        return cursorList.size();
+        return queryList.size();
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
