@@ -8,29 +8,45 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
 import com.j256.ormlite.dao.Dao;
+import com.raizlabs.android.dbflow.runtime.FlowContentObserver;
 import com.raizlabs.android.dbflow.sql.language.Select;
+import com.raizlabs.android.dbflow.structure.BaseModel;
+import com.raizlabs.android.dbflow.structure.Model;
 
 import java.sql.SQLException;
 import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import c.mars.ormliteprovider.R;
 import c.mars.ormliteprovider.dbflow.Queen;
 import c.mars.ormliteprovider.dbflow.WeatherTable;
 import c.mars.ormliteprovider.loaders.WeatherLoader;
+import c.mars.ormliteprovider.loaders.api.ApiHelper;
 import c.mars.ormliteprovider.loaders.api.WeatherAdapter;
 import c.mars.ormliteprovider.ormlite.Car;
 import c.mars.ormliteprovider.ormlite.DbHelper;
 import timber.log.Timber;
 
-public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<WeatherTable> {
+public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<WeatherTable>, FlowContentObserver.OnModelStateChangedListener {
 
     public static final int LOADER_ID = 1;
     @Bind(R.id.recycler_view)
     RecyclerView recyclerView;
     RecyclerView.LayoutManager layoutManager;
     WeatherAdapter adapter;
+    private FlowContentObserver observer = new FlowContentObserver();
+
+    @OnClick(R.id.fab)
+    void click() {
+        ApiHelper.getForecast().subscribe(weatherResponse -> {
+            WeatherTable weatherTable = weatherResponse.toTable();
+            if (weatherTable != null) {
+                weatherTable.insert();
+            }
+        });
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +56,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         ButterKnife.bind(this);
 
         layoutManager = new LinearLayoutManager(this);
-        adapter = new WeatherAdapter();// Adapter();
+        adapter = new WeatherAdapter(this);// Adapter();
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
 
@@ -53,6 +69,20 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 //        });
 
 //        ormLite();
+    }
+
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+        observer.registerForContentChanges(this, WeatherTable.class);
+        observer.addModelChangeListener(this);
+    }
+
+    @Override
+    protected void onPause() {
+        observer.removeModelChangeListener(this);
+        observer.unregisterForContentChanges(this);
+        super.onPause();
     }
 
     void dbFlow() {
@@ -97,15 +127,25 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     @Override
     public void onLoadFinished(Loader<WeatherTable> loader, WeatherTable data) {
         int id = loader.getId();
+
+        observer.removeModelChangeListener(this);
+
         if (data != null) {
             Timber.d(data.getTemp().toString());
             data.save(); //insert()
         }
         getLoaderManager().destroyLoader(id);
+        adapter.notifyDataSetChanged();
+        observer.addModelChangeListener(this);
     }
 
     @Override
     public void onLoaderReset(Loader<WeatherTable> loader) {
 
+    }
+
+    @Override
+    public void onModelStateChanged(Class<? extends Model> table, BaseModel.Action action) {
+        getSupportLoaderManager().restartLoader(LOADER_ID, null, this);
     }
 }

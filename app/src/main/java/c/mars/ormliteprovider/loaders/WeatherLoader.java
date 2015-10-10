@@ -21,6 +21,13 @@ public class WeatherLoader extends AsyncTaskLoader<WeatherTable> {
 
     @Override
     public WeatherTable loadInBackground() {
+        long count = new Select().from(WeatherTable.class).count();
+//        don't load if already cached
+        if (count > 0) {
+            return new Select().from(WeatherTable.class).querySingle();
+        }
+
+//        force load
         WeatherResponse response = ApiHelper.getForecast().toBlocking().first();
         Timber.d(response.getTemperature().toString());
         return response.toTable();
@@ -29,16 +36,7 @@ public class WeatherLoader extends AsyncTaskLoader<WeatherTable> {
     @Override
     protected void onStartLoading() {
         super.onStartLoading();
-
-        long count = new Select().from(WeatherTable.class).count();
-        if (count > 0) {
-            WeatherTable weatherTable = new Select().from(WeatherTable.class).querySingle();
-            deliverResult(weatherTable);
-            return;
-        }
-
-//        if table empty
+//        start background processing
         forceLoad();
     }
-
 }
